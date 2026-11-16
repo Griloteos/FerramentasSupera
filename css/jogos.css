@@ -181,33 +181,63 @@ input[type="text"] {
   box-shadow: 0 0 0 2px var(--acc);
 }
 
-/* Ultimate TTT Styles */
+/* Ultimate TTT Styles - Fully Responsive & Framed */
 .ultimate-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  max-width: 450px;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1;
   margin: 0 auto;
   background: var(--acc);
   padding: 8px;
   border-radius: 12px;
+  box-sizing: border-box;
 }
+
 .mini-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   gap: 3px;
   background: var(--card);
   padding: 4px;
   border-radius: 8px;
   border: 2px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
+
+/* Active board highlighting with lighter tint & glow */
 .mini-board.active-board {
+  background: var(--dec);
   border-color: var(--acc);
-  box-shadow: 0 0 10px var(--acc);
+  box-shadow: 0 0 12px rgba(255, 122, 0, 0.4);
 }
-.mini-board.won-x { background: rgba(31, 122, 62, 0.15); }
-.mini-board.won-o { background: rgba(239, 68, 68, 0.15); }
+
+.mini-board.won-x { background: rgba(31, 122, 62, 0.12); }
+.mini-board.won-o { background: rgba(239, 68, 68, 0.12); }
+
+.mini-board-overlay {
+  grid-column: span 3;
+  grid-row: span 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 800;
+  border-radius: 6px;
+}
+.mini-board-overlay.x { color: var(--success); background: rgba(31, 122, 62, 0.15); }
+.mini-board-overlay.o { color: var(--danger); background: rgba(239, 68, 68, 0.15); }
+.mini-board-overlay.draw { color: var(--mut); background: rgba(0,0,0,0.05); font-size: clamp(1rem, 4vw, 1.5rem); }
+
 .cell {
+  width: 100%;
+  height: 100%;
   aspect-ratio: 1;
   background: var(--bg);
   border: 1px solid var(--line);
@@ -215,7 +245,7 @@ input[type="text"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 4vw, 1.5rem);
   font-weight: 700;
   cursor: pointer;
   transition: background 0.1s;

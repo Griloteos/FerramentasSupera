@@ -130,7 +130,7 @@ class UltimateTTT {
     let html = `
       <div class="card" style="text-align:center;">
         <h2>❌ ⭕ Ultimate Tic Tac Toe</h2>
-        <div style="margin-bottom:12px; display:flex; justify-content:center; gap:16px; align-items:center;">
+        <div style="margin-bottom:12px; display:flex; justify-content:center; gap:16px; align-items:center; flex-wrap:wrap;">
           <div>Vez de: <span class="badge" style="font-size:1.1rem;">${this.currentPlayer}</span></div>
           <div>Tabuleiro Alvo: <span class="badge">${this.activeBoard !== null && this.boardStatus[this.activeBoard] === '' ? '#' + (this.activeBoard + 1) : 'Qualquer um (Livre)'}</span></div>
         </div>
@@ -149,9 +149,10 @@ class UltimateTTT {
       html += `<div class="${boardClass}">`;
 
       if (status !== '' && status !== 'DRAW') {
-        html += `<div style="grid-column: span 3; grid-row: span 3; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:800; color:var(--acc);">${status}</div>`;
+        const winClass = status === 'X' ? 'x' : 'o';
+        html += `<div class="mini-board-overlay ${winClass}">${status}</div>`;
       } else if (status === 'DRAW') {
-        html += `<div style="grid-column: span 3; grid-row: span 3; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; color:var(--mut);">VELHA</div>`;
+        html += `<div class="mini-board-overlay draw">VELHA</div>`;
       } else {
         cells.forEach((val, cIdx) => {
           html += `<div class="cell" onclick="utttGame.makeMove(${bIdx}, ${cIdx})">${val}</div>`;
