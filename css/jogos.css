@@ -228,10 +228,11 @@ input[type="text"] {
   }
 }
 
-.mini-board.won-x { background: rgba(31, 122, 62, 0.15); }
-.mini-board.won-o { background: rgba(239, 68, 68, 0.15); }
+/* Subtle background tints for won mini-boards */
+.mini-board.won-x { background: rgba(40, 167, 69, 0.18) !important; }
+.mini-board.won-o { background: rgba(239, 68, 68, 0.18) !important; }
 
-/* Absolute positioning for overlay with subtle background and BLACK symbol */
+/* Absolute positioning for overlay with TRANSPARENT background and PURE BLACK symbol */
 .mini-board-overlay {
   position: absolute;
   inset: 0;
@@ -239,14 +240,12 @@ input[type="text"] {
   align-items: center;
   justify-content: center;
   font-size: clamp(2.5rem, 12vw, 4rem);
-  font-weight: 800;
+  font-weight: 900;
   color: #000000 !important;
-  border-radius: 4px;
+  background: transparent !important;
   z-index: 5;
 }
-.mini-board-overlay.x { background: rgba(31, 122, 62, 0.22); }
-.mini-board-overlay.o { background: rgba(239, 68, 68, 0.22); }
-.mini-board-overlay.draw { color: #000000 !important; background: rgba(150, 150, 150, 0.25); font-size: clamp(1rem, 5vw, 1.6rem); }
+.mini-board-overlay.draw { color: #000000 !important; background: rgba(150, 150, 150, 0.3) !important; font-size: clamp(1rem, 5vw, 1.6rem); }
 
 .cell {
   width: 100%;
