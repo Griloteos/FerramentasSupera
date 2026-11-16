@@ -181,7 +181,7 @@ input[type="text"] {
   box-shadow: 0 0 0 2px var(--acc);
 }
 
-/* Ultimate TTT Styles - Strict Sizing & No Overflow */
+/* Ultimate TTT Styles - Strict Sizing & Absolute Overlay */
 .ultimate-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -212,40 +212,40 @@ input[type="text"] {
   box-sizing: border-box;
 }
 
-/* Active board highlighting with distinct light warm tint & glowing border */
+/* Active board highlighting with PURE WHITE BORDER & high contrast */
 .mini-board.active-board {
-  background: #ffe8cc !important;
-  border-color: var(--acc) !important;
-  box-shadow: 0 0 14px rgba(255, 122, 0, 0.7);
-  z-index: 2;
+  background: #ffebcc !important;
+  border: 3px solid #ffffff !important;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.9), 0 0 10px rgba(255, 122, 0, 0.8) !important;
+  z-index: 3;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .mini-board.active-board {
-    background: #3b2308 !important;
-    border-color: #ff9f33 !important;
-    box-shadow: 0 0 16px rgba(255, 159, 51, 0.8);
+    background: #4a2c0a !important;
+    border: 3px solid #ffffff !important;
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 159, 51, 0.9) !important;
   }
 }
 
 .mini-board.won-x { background: rgba(31, 122, 62, 0.15); }
 .mini-board.won-o { background: rgba(239, 68, 68, 0.15); }
 
+/* Absolute positioning ensures X and O overlay never breaks grid layout */
 .mini-board-overlay {
-  grid-column: span 3;
-  grid-row: span 3;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: clamp(2.5rem, 12vw, 4rem);
   font-weight: 800;
   border-radius: 4px;
-  width: 100%;
-  height: 100%;
+  z-index: 5;
 }
-.mini-board-overlay.x { color: var(--success); background: rgba(31, 122, 62, 0.2); }
-.mini-board-overlay.o { color: var(--danger); background: rgba(239, 68, 68, 0.2); }
-.mini-board-overlay.draw { color: var(--mut); background: rgba(0,0,0,0.08); font-size: clamp(1rem, 5vw, 1.8rem); }
+.mini-board-overlay.x { color: var(--success); background: rgba(31, 122, 62, 0.85); }
+.mini-board-overlay.o { color: var(--danger); background: rgba(239, 68, 68, 0.85); }
+.mini-board-overlay.draw { color: #fff; background: rgba(0,0,0,0.75); font-size: clamp(1rem, 5vw, 1.6rem); }
 
 .cell {
   width: 100%;
