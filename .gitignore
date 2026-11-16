@@ -1,0 +1,22 @@
+# IDEs & Editor configs
+.vscode/
+.idea/
+*.swp
+*.sro
+.DS_Store
+
+# Local skills and agent repositories
+agent-skills/
+skills/
+ui-ux-pro-max-skill/
+
+# Graphify knowledge graph local output
+graphify-out/
+
+# Node modules & logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
