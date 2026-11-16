@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Jogos de apoio pedagógico SUPERA: TRIO e Ultimate Tic Tac Toe com suporte online e local.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B2%3C/text%3E%3C/svg%3E">
+<title>Jogos SUPERA - Online e Local</title>
+<link rel="stylesheet" href="css/jogos.css">
+<!-- PeerJS for WebRTC P2P multiplayer -->
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body>
+
+<img src="logo-supera.png" alt="Supera" class="logo-supera">
+
+<main>
+  <nav style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--line); padding-bottom:10px;">
+    <a href="index.html" class="btn btn-sec" style="text-decoration:none;">◀ Voltar às Ferramentas</a>
+    <h1>🎲 Jogos SUPERA</h1>
+  </nav>
+
+  <!-- Hub Menu -->
+  <div id="hub-menu" class="card">
+    <h2>Escolha um Jogo</h2>
+    <p>Jogue localmente no mesmo aparelho (Pass-and-Play) ou crie uma sala online para jogar à distância via WebRTC P2P.</p>
+
+    <div class="grid-menu">
+      <div class="game-card" onclick="openGameSetup('trio')">
+        <h3>🃏 TRIO</h3>
+        <p>Jogo de memória, atenção e dedução lógica. Forme 3 trios de cartas iguais ou o trio do 7!</p>
+        <span class="badge">1 a 6 Jogadores</span>
+      </div>
+      <div class="game-card" onclick="openGameSetup('uttt')">
+        <h3>❌ ⭕ Ultimate Tic Tac Toe</h3>
+        <p>Super Jogo da Velha com estratégia profunda e encadeamento de tabuleiros.</p>
+        <span class="badge">Exatamente 2 Jogadores</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setup Modal / View -->
+  <div id="game-setup" class="card" style="display:none;">
+    <h2 id="setup-title">Configurar Jogo</h2>
+    <div style="margin: 16px 0;">
+      <label><b>Modo de Jogo:</b></label><br>
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <button class="btn" id="btn-mode-local" onclick="setPlayMode('local')">Pass-and-Play (Local)</button>
+        <button class="btn btn-sec" id="btn-mode-online" onclick="setPlayMode('online')">Multiplayer Online (P2P)</button>
+      </div>
+    </div>
+
+    <div id="online-options" style="display:none; margin: 16px 0; padding: 12px; background:var(--dec); border-radius:12px;">
+      <h3>Conexão Online</h3>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <button class="btn" onclick="hostOnlineGame()">Criar Nova Sala</button>
+        <span id="room-code-display" style="font-weight:700; color:var(--acc);"></span>
+      </div>
+      <div class="input-group" style="margin-top:12px;">
+        <input type="text" id="join-code-input" placeholder="Digite o código da sala (ex: 4821)" maxlength="4">
+        <button class="btn btn-sec" onclick="joinOnlineGame()">Entrar na Sala</button>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:20px;">
+      <button class="btn" onclick="startGame()">▶ Iniciar Partida</button>
+      <button class="btn btn-sec" onclick="backToHub()">Voltar</button>
+    </div>
+  </div>
+
+  <!-- Game Canvas Container -->
+  <div id="game-canvas" style="display:none;"></div>
+</main>
+
+<script src="js/net.js"></script>
+<script src="js/trio.js"></script>
+<script src="js/ultimate-ttt.js"></script>
+<script>
+  let selectedGame = '';
+  let playMode = 'local'; // 'local' or 'online'
+  let trioGame = null;
+  let utttGame = null;
+
+  function openGameSetup(game) {
+    selectedGame = game;
+    document.getElementById('hub-menu').style.display = 'none';
+    document.getElementById('game-setup').style.display = 'block';
+    document.getElementById('setup-title').textContent = game === 'trio' ? 'Configurar Jogo: TRIO' : 'Configurar Jogo: Ultimate Tic Tac Toe';
+  }
+
+  function backToHub() {
+    document.getElementById('game-setup').style.display = 'none';
+    document.getElementById('game-canvas').style.display = 'none';
+    document.getElementById('hub-menu').style.display = 'block';
+  }
+
+  function setPlayMode(mode) {
+    playMode = mode;
+    document.getElementById('btn-mode-local').className = mode === 'local' ? 'btn' : 'btn btn-sec';
+    document.getElementById('btn-mode-online').className = mode === 'online' ? 'btn' : 'btn btn-sec';
+    document.getElementById('online-options').style.display = mode === 'online' ? 'block' : 'none';
+  }
+
+  function hostOnlineGame() {
+    window.superaNet.hostRoom((code) => {
+      document.getElementById('room-code-display').textContent = `Código da Sala: ${code}`;
+      alert(`Sala criada com sucesso! Compartilhe o código ${code} com o outro jogador.`);
+    });
+
+    window.superaNet.onConnect((conn) => {
+      alert('Outro jogador conectado com sucesso!');
+      startGame();
+    });
+
+    window.superaNet.onData((data) => {
+      handleNetData(data);
+    });
+  }
+
+  function joinOnlineGame() {
+    const code = document.getElementById('join-code-input').value;
+    if (!code || code.length < 4) {
+      alert('Digite um código de sala válido.');
+      return;
+    }
+
+    window.superaNet.joinRoom(code, () => {
+      alert('Conectado à sala com sucesso! Iniciando partida...');
+      startGame();
+    }, (err) => {
+      alert('Falha ao conectar à sala. Verifique o código.');
+    });
+
+    window.superaNet.onData((data) => {
+      handleNetData(data);
+    });
+  }
+
+  function handleNetData(data) {
+    if (data.type === 'TRIO_STATE' && trioGame) {
+      trioGame.setState(data.state);
+    } else if (data.type === 'TRIO_INIT' && trioGame) {
+      trioGame.setState(data.state);
+    } else if (data.type === 'UTTT_STATE' && utttGame) {
+      utttGame.setState(data.state);
+    }
+  }
+
+  function startGame() {
+    document.getElementById('game-setup').style.display = 'none';
+    document.getElementById('game-canvas').style.display = 'block';
+
+    const isOnline = playMode === 'online';
+    const isHost = window.superaNet ? window.superaNet.isHost : true;
+
+    if (selectedGame === 'trio') {
+      trioGame = new TrioGame('game-canvas', isOnline, isHost);
+      trioGame.init(['Jogador 1', 'Jogador 2']);
+    } else if (selectedGame === 'uttt') {
+      utttGame = new UltimateTTT('game-canvas', isOnline, isHost);
+      utttGame.init();
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+/* SUPERA Jogos & Multiplayer Theme */
+:root {
+  --bg: #fff9f4;
+  --card: #ffffff;
+  --ink: #282319;
+  --mut: #71767b;
+  --line: #ffd2a9;
+  --acc: #ff7a00;
+  --acc-dark: #cc6300;
+  --acc-light: #ffbe5b;
+  --dec: #fff4e3;
+  --success: #1f7a3e;
+  --danger: #ef4444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1208;
+    --card: #241a0e;
+    --ink: #f5ede0;
+    --mut: #b09a7a;
+    --line: #3d2e1a;
+    --acc: #ff7a00;
+    --acc-dark: #cc6300;
+    --acc-light: #ffbe5b;
+    --dec: #2a1f0f;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+.logo-supera {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  height: 40px;
+  width: auto;
+  z-index: 1000;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1, h2, h3 { color: var(--acc); margin-top: 0; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.08);
+}
+
+.btn {
+  background: var(--acc);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+.btn:hover { background: var(--acc-dark); }
+.btn:active { transform: scale(0.98); }
+.btn-sec {
+  background: var(--card);
+  color: var(--acc);
+  border: 2px solid var(--acc);
+}
+.btn-sec:hover { background: var(--dec); }
+
+.grid-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.game-card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.game-card:hover {
+  border-color: var(--acc);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 122, 0, 0.15);
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+input[type="text"] {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+/* TRIO Specific Styles */
+.trio-table {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.center-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  justify-content: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.trio-card {
+  width: 55px;
+  height: 80px;
+  background: var(--card);
+  border: 2px solid var(--acc);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  color: var(--ink);
+}
+.trio-card.hidden {
+  background: var(--acc);
+  color: #fff;
+}
+.trio-card:hover { transform: scale(1.05); }
+
+.player-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.player-box {
+  background: var(--dec);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 16px;
+  min-width: 140px;
+  text-align: center;
+}
+.player-box.active {
+  border-color: var(--acc);
+  box-shadow: 0 0 0 2px var(--acc);
+}
+
+/* Ultimate TTT Styles */
+.ultimate-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  max-width: 450px;
+  margin: 0 auto;
+  background: var(--acc);
+  padding: 8px;
+  border-radius: 12px;
+}
+.mini-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  background: var(--card);
+  padding: 4px;
+  border-radius: 8px;
+  border: 2px solid var(--line);
+}
+.mini-board.active-board {
+  border-color: var(--acc);
+  box-shadow: 0 0 10px var(--acc);
+}
+.mini-board.won-x { background: rgba(31, 122, 62, 0.15); }
+.mini-board.won-o { background: rgba(239, 68, 68, 0.15); }
+.cell {
+  aspect-ratio: 1;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.cell:hover { background: var(--dec); }
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--dec);
+  color: var(--acc);
+}
