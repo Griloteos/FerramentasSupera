@@ -110,7 +110,6 @@ class TrioGame {
     card.revealed = true;
 
     if (val !== this.activeNumber) {
-      // Failed turn - show red borders instead of alert
       this.failedTurn = true;
       this.syncOrRender();
       return;
@@ -135,7 +134,6 @@ class TrioGame {
     this.revealedThisTurn.push({ type: 'player', playerIdx: targetPlayerIdx, which, val, cardIdx });
 
     if (val !== this.activeNumber) {
-      // Failed turn - show red borders instead of alert
       this.failedTurn = true;
       this.syncOrRender();
       return;
@@ -235,19 +233,26 @@ class TrioGame {
     });
     html += `</div></div>`;
 
-    // Players Areas (Lowest and Highest buttons WITHOUT showing values beforehand)
+    // Players Areas
     html += `<div class="card"><h3>Jogadores e Cartas nas Extremidades</h3><div class="player-area">`;
     this.players.forEach((name, idx) => {
       const hand = this.playerHands[idx] || [];
       const isCurrent = idx === this.currentPlayer;
       const hasCards = hand.length > 0;
 
+      const lowVal = hasCards ? hand[0] : '-';
+      const highVal = hasCards ? hand[hand.length - 1] : '-';
+
       // Check if this player's low or high card was revealed this turn
       const lowRevealed = this.revealedThisTurn.find(item => item.type === 'player' && item.playerIdx === idx && item.which === 'low');
       const highRevealed = this.revealedThisTurn.find(item => item.type === 'player' && item.playerIdx === idx && item.which === 'high');
 
-      const lowText = lowRevealed ? `Menor: ${lowRevealed.val}` : '🔽 Menor Carta';
-      const highText = highRevealed ? `Maior: ${highRevealed.val}` : '🔼 Maior Carta';
+      // Current player sees their own lowest and highest cards by default. Opponents' cards remain hidden until selected/revealed.
+      const showLow = isCurrent || lowRevealed;
+      const showHigh = isCurrent || highRevealed;
+
+      const lowText = showLow ? `Menor (${lowVal})` : '🔽 Menor Carta';
+      const highText = showHigh ? `Maior (${highVal})` : '🔼 Maior Carta';
 
       const lowStyle = (lowRevealed && this.failedTurn) ? 'border: 2px solid var(--danger); background: rgba(239,68,68,0.2);' : '';
       const highStyle = (highRevealed && this.failedTurn) ? 'border: 2px solid var(--danger); background: rgba(239,68,68,0.2);' : '';
