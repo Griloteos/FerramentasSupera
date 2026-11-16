@@ -70,7 +70,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 main{max-width:1100px;margin:0 auto;padding:16px}
 h1{font-size:1.25rem;margin:0 0 12px}
-nav{display:flex;gap:8px;margin-bottom:14px}
+nav{display:flex;gap:8px;margin-bottom:14px;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:999;border-bottom:1px solid var(--line);flex-wrap:wrap}
 button,input{font:inherit}
 button{touch-action:manipulation;user-select:none;-webkit-user-select:none}
 nav button{padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-weight:600}
@@ -131,6 +131,30 @@ nav{flex-wrap:wrap}
 .fb{display:none;margin-top:10px;padding:10px 14px;border-radius:10px}
 .fb.ok{display:block;background:#1f7a3e22;border:1px solid #1f7a3e}
 .fb.no{display:block;background:#c0392b22;border:1px solid #c0392b}
+.drawer-container { margin-bottom: 14px; }
+.drawer-toggle {
+  width: 100%;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 12px 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: var(--ink);
+}
+.drawer-toggle:hover { border-color: var(--acc); }
+.drawer-content {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 </style>
 </head>
 <body>
@@ -180,8 +204,13 @@ nav{flex-wrap:wrap}
 </section>
 
 <section id="aprender" hidden>
-<div class="chips" id="lm"><button class="on">Aula</button><button>Praticar</button></div>
-<div class="chips" id="ls"></div>
+<div class="chips" id="lm" style="margin-bottom:10px;"><button class="on">Aula</button><button>Praticar</button></div>
+<div class="drawer-container">
+  <button class="drawer-toggle" id="toggle-drawer">📚 Módulo: Base 5 <span>▼</span></button>
+  <div class="drawer-content" id="drawer-content" style="display:none;">
+    <div class="chips" id="ls" style="margin-bottom:0;"></div>
+  </div>
+</div>
 <div class="rule" id="lr"></div>
 <svg id="lb"></svg>
 <div class="step" id="lt"></div>
@@ -471,9 +500,22 @@ P.onclick=()=>{
 function load(k){
   stop();idx=k;L=LS[k];i=0;
   [...S.children].forEach((b,j)=>b.classList.toggle('on',j===k));
+  const tgBtn=$('#toggle-drawer');if(tgBtn)tgBtn.innerHTML=`📚 Módulo: ${L.n} <span>▼</span>`;
   R.innerHTML=L.r;if(PR)newEx();else{build();show()}
 }
-LS.forEach((l,k)=>{const b=document.createElement('button');b.textContent=l.n;b.onclick=()=>load(k);S.appendChild(b)});
+LS.forEach((l,k)=>{
+  const b=document.createElement('button');
+  b.textContent=l.n;
+  b.onclick=()=>{
+    load(k);
+    $('#drawer-content').style.display='none';
+  };
+  S.appendChild(b);
+});
+$('#toggle-drawer').onclick=()=>{
+  const dc=$('#drawer-content');
+  dc.style.display=dc.style.display==='none'?'block':'none';
+};
 /* Praticar: gerador de exercícios com uma única resposta correta */
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),p2=n=>String(n).padStart(2,'0');
 const shuf=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
