@@ -181,15 +181,14 @@ input[type="text"] {
   box-shadow: 0 0 0 2px var(--acc);
 }
 
-/* Ultimate TTT Styles - Fully Responsive & Framed */
+/* Ultimate TTT Styles - Strict Sizing & No Overflow */
 .ultimate-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 6px;
-  width: 100%;
-  max-width: 420px;
-  aspect-ratio: 1;
+  width: min(420px, 95vw);
+  height: min(420px, 95vw);
   margin: 0 auto;
   background: var(--acc);
   padding: 8px;
@@ -204,22 +203,33 @@ input[type="text"] {
   gap: 3px;
   background: var(--card);
   padding: 4px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 2px solid var(--line);
+  width: 100%;
+  height: 100%;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-/* Active board highlighting with lighter tint & glow */
+/* Active board highlighting with distinct light warm tint & glowing border */
 .mini-board.active-board {
-  background: var(--dec);
-  border-color: var(--acc);
-  box-shadow: 0 0 12px rgba(255, 122, 0, 0.4);
+  background: #ffe8cc !important;
+  border-color: var(--acc) !important;
+  box-shadow: 0 0 14px rgba(255, 122, 0, 0.7);
+  z-index: 2;
 }
 
-.mini-board.won-x { background: rgba(31, 122, 62, 0.12); }
-.mini-board.won-o { background: rgba(239, 68, 68, 0.12); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mini-board.active-board {
+    background: #3b2308 !important;
+    border-color: #ff9f33 !important;
+    box-shadow: 0 0 16px rgba(255, 159, 51, 0.8);
+  }
+}
+
+.mini-board.won-x { background: rgba(31, 122, 62, 0.15); }
+.mini-board.won-o { background: rgba(239, 68, 68, 0.15); }
 
 .mini-board-overlay {
   grid-column: span 3;
@@ -227,25 +237,26 @@ input[type="text"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-size: clamp(2.5rem, 12vw, 4rem);
   font-weight: 800;
-  border-radius: 6px;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
 }
-.mini-board-overlay.x { color: var(--success); background: rgba(31, 122, 62, 0.15); }
-.mini-board-overlay.o { color: var(--danger); background: rgba(239, 68, 68, 0.15); }
-.mini-board-overlay.draw { color: var(--mut); background: rgba(0,0,0,0.05); font-size: clamp(1rem, 4vw, 1.5rem); }
+.mini-board-overlay.x { color: var(--success); background: rgba(31, 122, 62, 0.2); }
+.mini-board-overlay.o { color: var(--danger); background: rgba(239, 68, 68, 0.2); }
+.mini-board-overlay.draw { color: var(--mut); background: rgba(0,0,0,0.08); font-size: clamp(1rem, 5vw, 1.8rem); }
 
 .cell {
   width: 100%;
   height: 100%;
-  aspect-ratio: 1;
   background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(1rem, 4vw, 1.5rem);
+  font-size: clamp(1rem, 4vw, 1.4rem);
   font-weight: 700;
   cursor: pointer;
   transition: background 0.1s;
