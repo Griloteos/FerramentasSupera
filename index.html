@@ -24,6 +24,8 @@
 <button class="btn" id="tf">Espelhar</button>
 <button class="btn" id="tm">Embaralhar</button>
 <button class="btn" id="tz">Montar quadrado</button>
+<button class="btn" id="tsnap" style="margin-left:8px;">🧲 Encaixe: Ativo</button>
+<span class="badge" id="ang" style="display:none; margin-left:auto; font-size:0.95rem;">0°</span>
 </div>
 <div class="wrap">
 <svg id="tg"><defs><pattern id="gd" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M100 0H0V100" fill="none" stroke="currentColor" stroke-opacity=".1"/></pattern></defs><rect width="2000" height="1400" fill="var(--card)"/><rect width="2000" height="1400" fill="url(#gd)"/></svg>
@@ -33,15 +35,7 @@
 <button id="zf" aria-label="Centralizar">⤢</button>
 </div>
 </div>
-<div class="rot">
-<div class="rb">
-<button data-d="-45">↶ 45°</button><button data-d="-15">↶ 15°</button><button data-d="-1">↶ 1°</button>
-<span id="ang">—</span>
-<button data-d="1">1° ↷</button><button data-d="15">15° ↷</button><button data-d="45">45° ↷</button>
-</div>
-<input type="range" id="sl" min="0" max="359" value="0" disabled aria-label="Ângulo da peça">
-</div>
-<p class="hint">Toque numa peça para selecioná-la e arraste para mover. Arraste o fundo para deslocar a mesa e use + e − para o zoom. Os botões de 1° aceitam toque longo.</p>
+<p class="hint">Toque numa peça para selecioná-la e arraste para mover. Use a <b>bolinha acima da peça selecionada</b> para girar (com ímã a cada 15° e 45°). Arraste o fundo para mover a mesa e use + e − para o zoom.</p>
 </section>
 
 <section id="soroban" hidden>

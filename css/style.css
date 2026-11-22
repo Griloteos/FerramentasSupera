@@ -87,14 +87,16 @@ svg{display:block;width:100%}
 #tg{height:clamp(340px,62vh,720px);color:var(--ink);background:var(--dec);border:1px solid var(--line);border-radius:14px;touch-action:none;user-select:none;-webkit-user-select:none}
 .zoom{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
 .zoom button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1.3rem;cursor:pointer;opacity:.94}
-.rot{margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px}
-.rb{display:flex;gap:6px;align-items:center}
-.rb button{flex:1;padding:12px 4px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:.85rem;cursor:pointer}
-.rb button:active{background:var(--acc);color:#fff}
-#ang{min-width:54px;text-align:center;font-weight:700;color:var(--acc)}
-#sl{width:100%;margin:12px 0 2px;padding:0;accent-color:var(--acc)}
-.pc{cursor:grab;stroke:rgba(0,0,0,.45);stroke-width:1.5;stroke-linejoin:round}
-.pc.sel{stroke:var(--ink);stroke-width:4}
+.pc{cursor:grab;stroke:rgba(0,0,0,.45);stroke-width:1.5;stroke-linejoin:round;transition:filter .15s ease}
+.pc.sel{stroke:var(--ink);stroke-width:4;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
+
+/* Alça de Giro (Bolinha) no Tangram */
+.tg-rot-stem{stroke:var(--acc);stroke-width:2.5;stroke-dasharray:4 3;pointer-events:none}
+.tg-rot-hit{cursor:grab;fill:transparent;touch-action:none}
+.tg-rot-hit:active{cursor:grabbing}
+.tg-rot-knob{fill:var(--acc);stroke:#ffffff;stroke-width:3;pointer-events:none;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.35))}
+.tg-rot-icon{fill:#ffffff;font-size:13px;font-weight:700;text-anchor:middle;pointer-events:none;user-select:none}
+.tg-snap-indicator{fill:#ff7a00;stroke:#ffffff;stroke-width:2.5;pointer-events:none;filter:drop-shadow(0 0 6px #ff7a00);transition:opacity 0.2s}
 input[type=text]{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:150px}
 .tot{margin-left:auto;font-size:1.1rem}
 .tot b{font-size:1.6rem;color:var(--acc)}

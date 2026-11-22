@@ -71,6 +71,17 @@
     return NM[c] || `coluna ${c + 1}`;
   }
 
+  function getCasaName(h) {
+    const NM = {
+      10: 'U. bilhão (casa 10)', 9: 'C. milhão (casa 9)', 8: 'D. milhão (casa 8)',
+      7: 'U. milhão (casa 7)', 6: 'C. milhar (casa 6)', 5: 'D. milhar (casa 5)',
+      4: 'U. milhar (casa 4)', 3: 'Centena (casa 3)', 2: 'Dezena (casa 2)',
+      1: 'Unidade (casa 1)', 0: 'Décimo (casa 0)', '-1': 'Centésimo (casa -1)',
+      '-2': 'Milésimo (casa -2)', '-3': 'D. milésimo (casa -3)', '-4': 'C. milésimo (casa -4)'
+    };
+    return NM[h] || `casa ${h}`;
+  }
+
   function resolver(expr) {
     const parsed = parseExpression(expr);
     if (!parsed) {
@@ -122,14 +133,18 @@
     const Ns = rawN.split('').map(Number);
     const k = Ds.length;
     const Ln = Ns.length;
-    const a = k + 4; // 4 colunas vazias
+
+    // Regra do Supera: Quantidade de dígitos do dividendo - (1 + Quantidade de dígitos do divisor)
+    const casaDividendo = Ln - (1 + k);
+    // Unidade = Casa 1 = coluna 9. Fórmula de conversão: col = 10 - casa
+    const a = 10 - casaDividendo;
     const U = a + Ln - 1;
 
-    if (U >= N_COLS) {
-      return { erro: 'Divisão muito grande para as 15 colunas do ábaco.' };
+    if (a < 0 || a < k || U >= N_COLS) {
+      return { erro: 'Divisão fora dos limites das 15 colunas do ábaco.' };
     }
 
-    // Monta divisor à esquerda e dividendo após 4 colunas vazias
+    // Monta divisor à esquerda (colunas 0..k-1) e dividendo da esquerda para a direita a partir da casa calculada
     for (let i = 0; i < k; i++) state[i] = Ds[i];
     for (let i = 0; i < Ln; i++) state[a + i] = Ns[i];
 
@@ -137,11 +152,12 @@
     for (let i = 0; i < k; i++) colunasIniciais.push(i);
     for (let i = 0; i < Ln; i++) colunasIniciais.push(a + i);
 
+    const nomeCasaDividendo = getCasaName(casaDividendo);
     passos.push({
       id: passoId++,
       tokenIdx: 0,
       dedo: null,
-      texto: `Montamos a divisão: divisor ${D} à esquerda, 4 colunas vazias e dividendo ${N}.`,
+      texto: `Montamos a divisão: divisor ${D} à esquerda. Posicionamento do dividendo: dígitos do dividendo (${Ln}) − (1 + dígitos do divisor (${k})) = ${Ln} − ${1 + k} = ${casaDividendo} (${nomeCasaDividendo}). Posicionamos o dividendo ${N} da esquerda para a direita a partir da ${nomeCasaDividendo}.`,
       estado: cloneState(state),
       destaque: colunasIniciais,
       tags: ['Divisão'],
