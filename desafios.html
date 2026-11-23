@@ -8,28 +8,33 @@
 <title>Desafios Supera - Sudoku</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
-body { padding: 20px 10px; background: var(--bg); }
+body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-serif; }
 .header { max-width: 800px; margin: 0 auto 24px; text-align: center; }
 .header h1 { margin-bottom: 8px; color: var(--ink); }
 .header p { color: var(--mut); }
 .nav-top { display:flex; justify-content:center; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
-.nav-top a, .nav-top button { padding:10px 18px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; transition:all .2s; font-weight:600; text-decoration:none; }
-.nav-top a.on, .nav-top button.on { background:var(--acc); color:#fff; border-color:var(--acc); box-shadow:0 4px 12px rgba(255,122,0,0.2); }
-#desafio-container { max-width: 800px; margin: 0 auto; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; min-height:400px; position:relative; }
-.sudoku-grid { display:grid; grid-template-columns:repeat(9, 1fr); gap:1px; background:var(--line); border:2px solid var(--line); margin:0 auto; width:378px; height:378px; }
-.sudoku-cell { background:var(--card); display:flex; align-items:center; justify-content:center; }
-.sudoku-cell.row-thick { border-bottom:2px solid var(--line); }
-.sudoku-cell.col-thick { border-right:2px solid var(--line); }
-.sudoku-cell:last-child { border:none; }
-.sudoku-input { width:100%; height:100%; text-align:center; font-size:1.4rem; border:none; background:transparent; color:var(--ink); font-weight:700; outline:none; padding:0; margin:0; }
+.nav-top a { padding:10px 18px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); text-decoration:none; font-weight:600; }
+#desafio-container { max-width: 800px; margin: 0 auto; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; }
+#sudoku-container { text-align:center; }
+.sudoku-grid { display:grid; grid-template-columns:repeat(9, 44px); grid-template-rows:repeat(9, 44px); gap:1px; background:var(--line); border:2px solid var(--line); margin:0 auto 20px; }
+.sudoku-cell { background:var(--card); display:flex; align-items:center; justify-content:center; position:relative; }
+.sudoku-cell.thick-right { border-right:2px solid var(--line); }
+.sudoku-cell.thick-bottom { border-bottom:2px solid var(--line); }
+.sudoku-input { width:42px; height:42px; text-align:center; font-size:1.5rem; border:none; background:transparent; color:var(--ink); font-weight:600; padding:0; margin:0; outline:none; }
+.sudoku-input.fixed { color:var(--ink); font-weight:700; background:var(--dec); }
 .sudoku-input:focus { background:rgba(255,122,0,0.1); }
-.sudoku-input.correct { background:rgba(31,122,62,0.1); color:#1f7a3e; }
+.sudoku-input.correct { background:rgba(31,122,62,0.15); color:#1f7a3e; }
 .sudoku-input.error { background:rgba(255,0,110,0.15); color:#ff006e; }
-.desafio-controls { text-align:center; margin:20px 0; }
-.desafio-controls .btn { margin:4px; }
-.desafio-status { text-align:center; margin:16px 0; }
-.desafio-msg { display:block; margin-top:8px; font-size:0.95rem; }
-select { padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-weight:600; }
+.numpad { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.numpad button { width:44px; height:44px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:1.2rem; font-weight:700; cursor:pointer; }
+.numpad button:hover { background:var(--dec); }
+.numpad button.selected { background:var(--acc); color:#fff; }
+.controls { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:16px; }
+.controls .btn { padding:10px 16px; }
+.status { text-align:center; margin:16px 0; }
+.status span { font-size:1.2rem; font-weight:700; color:var(--acc); }
+.status small { display:block; margin-top:6px; color:var(--mut); }
+#niveis { padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-weight:600; }
 </style>
 </head>
 <body>
@@ -40,7 +45,7 @@ select { padding:8px 12px; border-radius:10px; border:1px solid var(--line); bac
 
 <div class="nav-top">
   <a href="index.html" style="padding:10px 18px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); text-decoration:none; font-weight:600;">🏠 Voltar ao Menu</a>
-  <select id="sd-nivel-seletor">
+  <select id="niveis">
     <option value="facil">Fácil</option>
     <option value="intermediario">Intermediário</option>
     <option value="dificil">Difícil</option>
@@ -50,15 +55,29 @@ select { padding:8px 12px; border-radius:10px; border:1px solid var(--line); bac
 </div>
 
 <div id="desafio-container">
-  <div class="desafio-status">
-    <span id="sd-tempo" style="font-size:1.2rem; font-weight:700; color:var(--acc);">0:00</span>
-    <span id="sd-msg" class="desafio-msg" style="display:block; margin-top:8px;"></span>
-  </div>
-  <div id="sudoku-grid" class="sudoku-grid" style="display:none;"></div>
-  <div class="desafio-controls" style="display:none;">
-    <button class="btn" id="sd-verificar">✅ Verificar</button>
-    <button class="btn" id="sd-dica">💡 Dica</button>
-    <button class="btn" id="sd-reiniciar">🔄 Reiniciar</button>
+  <div id="sudoku-container">
+    <div id="timer" class="status">
+      <span id="tempo">00:00</span>
+      <small id="status-msg">Selecione um nível e clique em Novo Jogo</small>
+    </div>
+    <div id="sudoku-grid" class="sudoku-grid"></div>
+    <div class="numpad" id="numpad">
+      <button data-num="1">1</button>
+      <button data-num="2">2</button>
+      <button data-num="3">3</button>
+      <button data-num="4">4</button>
+      <button data-num="5">5</button>
+      <button data-num="6">6</button>
+      <button data-num="7">7</button>
+      <button data-num="8">8</button>
+      <button data-num="9">9</button>
+      <button data-num="0" style="background:#f0f0f0;">⌫</button>
+    </div>
+    <div class="controls">
+      <button class="btn" id="btn-novo">Novo Jogo</button>
+      <button class="btn" id="btn-verificar">Verificar</button>
+      <button class="btn" id="btn-dica">Dica</button>
+    </div>
   </div>
 </div>
 
@@ -67,28 +86,32 @@ select { padding:8px 12px; border-radius:10px; border:1px solid var(--line); bac
 <script>
 (function() {
   const GRID_SIZE = 9;
-  const CELL_SIZE = 42;
-  const BOARD_SIZE = GRID_SIZE * CELL_SIZE;
+  const CELL_SIZE = 44;
 
-  let currentGrid = [];
-  let solutionGrid = [];
-  let startTime = 0;
-  let timerInterval = 0;
-  let level = 'facil';
-  let cells = [];
+  let gridData = [];
+  let solutionData = [];
+  let selectedCell = null;
+  let timerInterval = null;
+  let seconds = 0;
+  let currentLevel = 'facil';
 
-  function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return m + ':' + s.toString().padStart(2, '0');
+  const gridEl = document.getElementById('sudoku-grid');
+  const tempoEl = document.getElementById('tempo');
+  const statusMsg = document.getElementById('status-msg');
+
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const s = (sec % 60).toString().padStart(2, '0');
+    return m + ':' + s;
   }
 
   function startTimer() {
-    startTime = Date.now();
     if (timerInterval) clearInterval(timerInterval);
+    seconds = 0;
+    tempoEl.textContent = '00:00';
     timerInterval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      document.getElementById('sd-tempo').textContent = formatTime(elapsed);
+      seconds++;
+      tempoEl.textContent = formatTime(seconds);
     }, 1000);
   }
 
@@ -97,140 +120,159 @@ select { padding:8px 12px; border-radius:10px; border:1px solid var(--line); bac
   }
 
   function createGrid() {
-    const container = document.getElementById('sudoku-grid');
-    container.innerHTML = '';
-    container.style.display = 'grid';
+    gridEl.innerHTML = '';
+    gridData = [];
 
     for (let r = 0; r < GRID_SIZE; r++) {
+      const row = [];
       for (let c = 0; c < GRID_SIZE; c++) {
         const cell = document.createElement('div');
-        cell.className = 'sudoku-cell' + (r % 3 === 0 ? ' row-thick' : '') + (c % 3 === 0 ? ' col-thick' : '');
-        cell.style.width = CELL_SIZE + 'px';
-        cell.style.height = CELL_SIZE + 'px';
+        cell.className = 'sudoku-cell';
+        if ((c + 1) % 3 === 0 && c < 8) cell.classList.add('thick-right');
+        if ((r + 1) % 3 === 0 && r < 8) cell.classList.add('thick-bottom');
 
         const input = document.createElement('input');
-        input.type = 'text';
-        input.maxLength = 1;
-        input.inputMode = 'numeric';
         input.className = 'sudoku-input';
         input.dataset.row = r;
         input.dataset.col = c;
 
-        input.addEventListener('input', function() {
-          this.value = this.value.replace(/[^1-9]/g, '');
+        input.addEventListener('focus', () => {
+          if (selectedCell) selectedCell.input.classList.remove('selected');
+          selectedCell = { input, r, c };
+          input.classList.add('selected');
+        });
+
+        input.addEventListener('click', () => {
+          if (selectedCell) selectedCell.input.classList.remove('selected');
+          selectedCell = { input, r, c };
+          input.classList.add('selected');
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key >= '1' && e.key <= '9') {
+            e.preventDefault();
+            input.value = e.key;
+            input.classList.remove('correct', 'error');
+          } else if (e.key === 'Backspace' || e.key === 'Delete') {
+            e.preventDefault();
+            input.value = '';
+            input.classList.remove('correct', 'error');
+          }
         });
 
         cell.appendChild(input);
-        container.appendChild(cell);
-        cells.push({ row: r, col: c, input, el: cell });
+        gridEl.appendChild(cell);
+        row.push({ input, fixed: false });
       }
+      gridData.push(row);
     }
   }
 
-  function newGame(nivel) {
-    level = nivel;
+  function novoJogo(nivel) {
     stopTimer();
-    document.getElementById('sd-tempo').textContent = '0:00';
-    document.getElementById('sd-msg').textContent = '';
-    document.getElementById('sd-msg').style.color = 'var(--ink)';
+    currentLevel = nivel;
 
     const puzzle = SudokuGenerator.generateSudoku(nivel);
-    currentGrid = puzzle.grid;
-    solutionGrid = puzzle.solution;
+    gridData = [];
+    solutionData = puzzle.solution;
 
-    cells = [];
+    const niveis = { facil: 'Fácil', intermediario: 'Intermediário', dificil: 'Difícil', avancado: 'Avançado', expert: 'Expert' };
+    statusMsg.textContent = 'Nível: ' + niveis[nivel];
+
     createGrid();
     startTimer();
 
-    cells.forEach(cell => {
-      const val = currentGrid[cell.row][cell.col];
-      cell.input.value = val || '';
-      cell.input.disabled = !!val;
-      cell.input.classList.remove('error', 'correct');
-    });
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const val = puzzle.grid[r][c];
+        if (val !== 0) {
+          gridData[r][c].input.value = val;
+          gridData[r][c].input.classList.add('fixed');
+          gridData[r][c].fixed = true;
+        }
+      }
+    }
 
-    document.getElementById('sd-msg').textContent = 'Nível: ' + nivel.charAt(0).toUpperCase() + nivel.slice(1);
-    document.getElementById('sd-msg').style.color = 'var(--acc)';
+    statusMsg.textContent = 'Comece a preencher os números!';
   }
 
-  function verify() {
-    let emptyCount = 0;
+  function verificar() {
+    let empty = 0;
     let errors = 0;
     let correct = 0;
 
-    cells.forEach(cell => {
-      const val = cell.input.value;
-      if (!val) {
-        emptyCount++;
-        cell.input.classList.remove('error', 'correct');
-        return;
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const val = parseInt(gridData[r][c].input.value);
+        if (!val) {
+          empty++;
+          gridData[r][c].input.classList.remove('correct', 'error');
+        } else if (val === solutionData[r][c]) {
+          correct++;
+          gridData[r][c].input.classList.add('correct');
+          gridData[r][c].input.classList.remove('error');
+        } else {
+          errors++;
+          gridData[r][c].input.classList.add('error');
+          gridData[r][c].input.classList.remove('correct');
+        }
       }
+    }
 
-      const num = parseInt(val, 10);
-      if (num < 1 || num > 9) {
-        cell.input.classList.add('error');
-        cell.input.classList.remove('correct');
-        errors++;
-        return;
-      }
-
-      if (num === solutionGrid[cell.row][cell.col]) {
-        cell.input.classList.add('correct');
-        cell.input.classList.remove('error');
-        correct++;
-      } else {
-        cell.input.classList.add('error');
-        cell.input.classList.remove('correct');
-        errors++;
-      }
-    });
-
-    if (emptyCount === 0 && errors === 0) {
+    if (empty === 0 && errors === 0) {
       stopTimer();
-      document.getElementById('sd-msg').textContent = '🎉 Parabéns! Você completou o Sudoku em ' + document.getElementById('sd-tempo').textContent + '!';
-      document.getElementById('sd-msg').style.color = '#1f7a3e';
+      statusMsg.textContent = '🎉 Parabéns! Sudoku completo em ' + formatTime(seconds) + '!';
     } else if (errors > 0) {
-      document.getElementById('sd-msg').textContent = errors + ' erro(s) encontrado(s). Continue tentando!';
-      document.getElementById('sd-msg').style.color = '#ff006e';
+      statusMsg.textContent = errors + ' erro(s) encontrado(s). Continue tentando!';
     } else {
-      document.getElementById('sd-msg').textContent = 'Ainda faltam ' + emptyCount + ' número(s).';
-      document.getElementById('sd-msg').style.color = 'var(--acc)';
+      statusMsg.textContent = correct + ' acertos. ' + empty + ' células vazias.';
     }
   }
 
-  function giveHint() {
-    let found = false;
-    for (const cell of cells) {
-      const val = parseInt(cell.input.value, 10);
-      if (!val || val !== solutionGrid[cell.row][cell.col]) {
-        cell.input.value = solutionGrid[cell.row][cell.col];
-        cell.input.classList.remove('error');
-        cell.input.classList.add('correct');
-        found = true;
-        break;
+  function dica() {
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        if (!gridData[r][c].fixed && !gridData[r][c].input.value) {
+          gridData[r][c].input.value = solutionData[r][c];
+          gridData[r][c].input.classList.add('correct');
+          gridData[r][c].input.classList.remove('error');
+          statusMsg.textContent = 'Dica: célula [' + (r+1) + ',' + (c+1) + '] = ' + solutionData[r][c];
+          return;
+        }
       }
     }
-    if (!found) {
-      document.getElementById('sd-msg').textContent = 'Jogo completo!';
-      document.getElementById('sd-msg').style.color = '#1f7a3e';
+    statusMsg.textContent = 'Jogo completo!';
+  }
+
+  // Eventos
+  document.getElementById('niveis').addEventListener('change', (e) => {
+    novoJogo(e.target.value);
+  });
+
+  document.getElementById('btn-novo').addEventListener('click', () => {
+    novoJogo(currentLevel);
+  });
+
+  document.getElementById('btn-verificar').addEventListener('click', verificar);
+  document.getElementById('btn-dica').addEventListener('click', dica);
+
+  // Numpad
+  document.getElementById('numpad').addEventListener('click', (e) => {
+    if (e.target.tagName !== 'BUTTON') return;
+    if (!selectedCell) return;
+
+    const num = e.target.dataset.num;
+    if (num === '0') {
+      selectedCell.input.value = '';
+      selectedCell.input.classList.remove('correct', 'error');
     } else {
-      document.getElementById('sd-msg').textContent = '💡 Dica aplicada!';
-      document.getElementById('sd-msg').style.color = 'var(--acc)';
+      selectedCell.input.value = num;
+      selectedCell.input.classList.remove('correct', 'error');
     }
-  }
+  });
 
-  function restart() {
-    newGame(level);
-  }
-
-  document.getElementById('sd-verificar').onclick = verify;
-  document.getElementById('sd-dica').onclick = giveHint;
-  document.getElementById('sd-reiniciar').onclick = restart;
-  document.getElementById('sd-nivel-seletor').onchange = function(e) {
-    newGame(e.target.value);
-  };
-
-  newGame('facil');
+  // Iniciar com nível Fácil
+  novoJogo('facil');
 })();
 </script>
 </body>
