@@ -97,6 +97,22 @@ svg{display:block;width:100%}
 .tg-rot-knob{fill:var(--acc);stroke:#ffffff;stroke-width:3;pointer-events:none;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.35))}
 .tg-rot-icon{fill:#ffffff;font-size:13px;font-weight:700;text-anchor:middle;pointer-events:none;user-select:none}
 .tg-snap-indicator{fill:#ff7a00;stroke:#ffffff;stroke-width:2.5;pointer-events:none;filter:drop-shadow(0 0 6px #ff7a00);transition:opacity 0.2s}
+
+/* Silhueta / Contorno Guia do Tangram */
+.tg-silhouette{fill:rgba(0,0,0,0.06);stroke:var(--line);stroke-width:2;stroke-dasharray:6 5;pointer-events:none;transition:fill .3s, stroke .3s}
+.tg-silhouette.complete{fill:rgba(31,122,62,0.18);stroke:#1f7a3e;stroke-width:3;stroke-dasharray:none}
+
+/* Mensagem de Conclusão da Figura */
+.tg-win-toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:#1f7a3e;color:#ffffff;padding:10px 20px;border-radius:999px;font-weight:700;font-size:1rem;box-shadow:0 6px 18px rgba(0,0,0,0.25);z-index:20;display:flex;align-items:center;gap:8px;animation:tgFadeUp .3s ease-out;pointer-events:none}
+@keyframes tgFadeUp{from{opacity:0;transform:translate(-50%,15px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* Paleta Flutuante de Cores por Peça */
+.tg-palette{position:absolute;top:12px;left:12px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,0.15);z-index:10;max-width:calc(100% - 70px);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tg-color-btn{width:24px;height:24px;border-radius:50%;border:2px solid #ffffff;box-shadow:0 0 0 1px rgba(0,0,0,0.25);cursor:pointer;padding:0;flex-shrink:0;transition:transform .15s}
+.tg-color-btn:hover{transform:scale(1.2)}
+.tg-color-btn.active{box-shadow:0 0 0 2.5px var(--acc);transform:scale(1.15)}
+.tg-color-input-wrap{position:relative;width:24px;height:24px;border-radius:50%;overflow:hidden;border:2px solid #ffffff;box-shadow:0 0 0 1px rgba(0,0,0,0.25);flex-shrink:0;cursor:pointer;background:conic-gradient(red,yellow,lime,aqua,blue,magenta,red)}
+.tg-color-input{position:absolute;top:-10px;left:-10px;width:50px;height:50px;opacity:0;cursor:pointer}
 input[type=text]{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:150px}
 .tot{margin-left:auto;font-size:1.1rem}
 .tot b{font-size:1.6rem;color:var(--acc)}
