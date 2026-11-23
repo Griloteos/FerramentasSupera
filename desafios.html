@@ -8,33 +8,50 @@
 <title>Desafios Supera - Sudoku</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
-body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-serif; }
-.header { max-width: 800px; margin: 0 auto 24px; text-align: center; }
-.header h1 { margin-bottom: 8px; color: var(--ink); }
-.header p { color: var(--mut); }
+:root { --bg: #1a1208; --card: #241a0e; --ink: #f5ede0; --mut: #b09a7a; --line: #3d2e1a; --acc: #ff7a00; --acc-dark: #cc6300; --acc-light: #ffbe5b; --dec: #2a1f0f; }
+body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-serif; color: var(--ink); text-align: center; }
+.header { margin: 0 auto 24px; }
+.header h1 { margin-bottom: 8px; color: var(--ink); font-size: 2rem; }
+.header p { color: var(--mut); max-width: 500px; margin: 0 auto; }
 .nav-top { display:flex; justify-content:center; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
-.nav-top a { padding:10px 18px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); text-decoration:none; font-weight:600; }
-#desafio-container { max-width: 800px; margin: 0 auto; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; }
-#sudoku-container { text-align:center; }
-.sudoku-grid { display:grid; grid-template-columns:repeat(9, 44px); grid-template-rows:repeat(9, 44px); gap:1px; background:var(--line); border:2px solid var(--line); margin:0 auto 20px; }
+.nav-top a { padding:10px 18px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); text-decoration:none; font-weight:600; box-shadow:0 2px 4px rgba(0,0,0,0.2); }
+.nav-top a:hover { border-color:var(--acc); }
+#desafio-container { width: fit-content; margin: 0 auto; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px; box-shadow:0 10px 40px rgba(0,0,0,0.4); }
+#sudoku-container { text-align:center; display:inline-block; }
+.timer-container { background:linear-gradient(135deg, var(--acc-light) 0%, var(--acc) 100%); color:#fff; padding:12px 24px; border-radius:12px; margin-bottom:20px; box-shadow:0 4px 12px rgba(255,122,0,0.3); }
+#tempo { font-size:1.8rem; font-weight:800; letter-spacing:2px; }
+.status-bar { display:flex; justify-content:space-between; align-items:center; margin:20px 0 16px; flex-wrap:wrap; gap:12px; }
+.status-msg { color:var(--ink); font-weight:600; font-size:0.95rem; min-height:24px; }
+.niveis-select { padding:10px 14px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-weight:600; font-size:1rem; box-shadow:0 2px 4px rgba(0,0,0,0.2); }
+#sudoku-grid { display:grid; grid-template-columns:repeat(9, 48px); grid-template-rows:repeat(9, 48px); background:var(--line); border:3px solid var(--line); margin:0 auto 24px; position: relative; }
 .sudoku-cell { background:var(--card); display:flex; align-items:center; justify-content:center; position:relative; }
-.sudoku-cell.thick-right { border-right:2px solid var(--line); }
-.sudoku-cell.thick-bottom { border-bottom:2px solid var(--line); }
-.sudoku-input { width:42px; height:42px; text-align:center; font-size:1.5rem; border:none; background:transparent; color:var(--ink); font-weight:600; padding:0; margin:0; outline:none; }
-.sudoku-input.fixed { color:var(--ink); font-weight:700; background:var(--dec); }
-.sudoku-input:focus { background:rgba(255,122,0,0.1); }
-.sudoku-input.correct { background:rgba(31,122,62,0.15); color:#1f7a3e; }
-.sudoku-input.error { background:rgba(255,0,110,0.15); color:#ff006e; }
-.numpad { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
-.numpad button { width:44px; height:44px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:1.2rem; font-weight:700; cursor:pointer; }
-.numpad button:hover { background:var(--dec); }
-.numpad button.selected { background:var(--acc); color:#fff; }
-.controls { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:16px; }
-.controls .btn { padding:10px 16px; }
-.status { text-align:center; margin:16px 0; }
-.status span { font-size:1.2rem; font-weight:700; color:var(--acc); }
-.status small { display:block; margin-top:6px; color:var(--mut); }
-#niveis { padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-weight:600; }
+.sudoku-cell:nth-child(3n) { border-right: 2px solid var(--ink); }
+.sudoku-cell:nth-child(n+19):nth-child(-n+27) { border-bottom: 2px solid var(--ink); }
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--ink); }
+.sudoku-cell.fixed { background:rgba(61,46,26,0.3); }
+.sudoku-cell.fixed .sudoku-input { color:var(--acc-light); font-weight:700; }
+.sudoku-input { width:100%; height:100%; text-align:center; font-size:1.8rem; border:none; background:transparent; color:var(--ink); font-weight:600; padding:0; margin:0; outline:none; transition:all .2s; }
+.sudoku-input:focus { background:rgba(255,122,0,0.2); }
+.sudoku-input.selected { background:rgba(255,122,0,0.2); box-shadow:inset 0 0 0 2px var(--acc); }
+.sudoku-input.correct { background:rgba(31,122,62,0.2); color:#1f7a3e; }
+.sudoku-input.error { background:rgba(255,0,110,0.2); color:#ff006e; animation:shake 0.3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)} }
+.sudoku-cell .notas { position:absolute; top:2px; left:2px; right:2px; bottom:2px; display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(3, 1fr); pointer-events:none; }
+.nota { font-size:0.65rem; color:var(--mut); text-align:center; display:flex; align-items:center; justify-content:center; line-height:1; }
+.sudoku-input.resolved { text-decoration:line-through; color:var(--acc); opacity:0.8; background:rgba(255,122,0,0.1); }
+.numpad { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:24px 0; padding:16px; background:var(--line); border-radius:12px; width: fit-content; margin-left: auto; margin-right: auto; }
+.numpad button { width:52px; height:52px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:1.4rem; font-weight:700; cursor:pointer; transition:all .2s; box-shadow:0 2px 4px rgba(0,0,0,0.2); }
+.numpad button:hover { transform:translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.3); background:var(--acc); color:#fff; }
+.numpad button:active { transform:translateY(0); }
+.numpad button.resolved { text-decoration:line-through; opacity:0.5; color: var(--acc); }
+.controls { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px; padding-top:16px; border-top:1px dashed var(--line); width: fit-content; margin-left: auto; margin-right: auto; }
+.controls .btn { padding:12px 20px; font-weight:600; box-shadow:0 2px 8px rgba(0,0,0,0.3); transition:all .2s; }
+.controls .btn:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(255,122,0,0.4); }
+.btn-primary { background:var(--acc); color:#fff; }
+.btn-secondary { background:var(--card); color:var(--ink); border:1px solid var(--line); }
+.nota-toggle { display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; border:1px solid var(--line); background:var(--card); cursor:pointer; font-weight:600; font-size:0.9rem; color:var(--ink); transition:all .2s; }
+.nota-toggle.active { background:var(--acc); color:#fff; border-color:var(--acc); box-shadow:0 4px 12px rgba(255,122,0,0.3); }
+.nota-toggle.active .nota-text { text-decoration:line-through; opacity:0.6; }
 </style>
 </head>
 <body>
@@ -44,21 +61,26 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
 </div>
 
 <div class="nav-top">
-  <a href="index.html" style="padding:10px 18px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); text-decoration:none; font-weight:600;">🏠 Voltar ao Menu</a>
-  <select id="niveis">
-    <option value="facil">Fácil</option>
-    <option value="intermediario">Intermediário</option>
-    <option value="dificil">Difícil</option>
-    <option value="avancado">Avançado</option>
-    <option value="expert">Expert</option>
+  <a href="index.html" style="padding:10px 18px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); text-decoration:none; font-weight:600; box-shadow:0 2px 4px rgba(0,0,0,0.2);">🏠 Voltar ao Menu</a>
+  <select id="niveis" class="niveis-select">
+    <option value="facil">Fácil ⭐</option>
+    <option value="intermediario">Intermediário ⭐⭐</option>
+    <option value="dificil">Difícil ⭐⭐⭐</option>
+    <option value="avancado">Avançado ⭐⭐⭐⭐</option>
+    <option value="expert">Expert ⭐⭐⭐⭐⭐</option>
   </select>
+  <label class="nota-toggle" id="btn-notas">
+    <span class="nota-text">✏️ Anotações</span>
+  </label>
 </div>
 
 <div id="desafio-container">
   <div id="sudoku-container">
-    <div id="timer" class="status">
+    <div class="timer-container">
       <span id="tempo">00:00</span>
-      <small id="status-msg">Selecione um nível e clique em Novo Jogo</small>
+    </div>
+    <div class="status-bar">
+      <span id="status-msg" class="status-msg">Selecione um nível e clique em Novo Jogo</span>
     </div>
     <div id="sudoku-grid" class="sudoku-grid"></div>
     <div class="numpad" id="numpad">
@@ -71,12 +93,12 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
       <button data-num="7">7</button>
       <button data-num="8">8</button>
       <button data-num="9">9</button>
-      <button data-num="0" style="background:#f0f0f0;">⌫</button>
     </div>
     <div class="controls">
-      <button class="btn" id="btn-novo">Novo Jogo</button>
-      <button class="btn" id="btn-verificar">Verificar</button>
-      <button class="btn" id="btn-dica">Dica</button>
+      <button class="btn btn-primary" id="btn-novo">🔄 Novo Jogo</button>
+      <button class="btn btn-secondary" id="btn-verificar">✅ Verificar</button>
+      <button class="btn btn-secondary" id="btn-dica">💡 Dica</button>
+      <button class="btn btn-secondary btn-small" id="btn-apagar">🗑️ Apagar</button>
     </div>
   </div>
 </div>
@@ -86,18 +108,18 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
 <script>
 (function() {
   const GRID_SIZE = 9;
-  const CELL_SIZE = 44;
-
   let gridData = [];
   let solutionData = [];
   let selectedCell = null;
   let timerInterval = null;
   let seconds = 0;
   let currentLevel = 'facil';
+  let notasAtivas = false;
 
   const gridEl = document.getElementById('sudoku-grid');
   const tempoEl = document.getElementById('tempo');
   const statusMsg = document.getElementById('status-msg');
+  const btnNotas = document.getElementById('btn-notas');
 
   function formatTime(sec) {
     const m = Math.floor(sec / 60).toString().padStart(2, '0');
@@ -119,6 +141,37 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
     if (timerInterval) clearInterval(timerInterval);
   }
 
+  function criarCell(r, c) {
+    const cell = document.createElement('div');
+    cell.className = 'sudoku-cell';
+    if ((c + 1) % 3 === 0 && c < 8) cell.classList.add('thick-right');
+    if ((r + 1) % 3 === 0 && r < 8) cell.classList.add('thick-bottom');
+
+    const notasDiv = document.createElement('div');
+    notasDiv.className = 'notas';
+    for (let i = 1; i <= 9; i++) {
+      const n = document.createElement('span');
+      n.className = 'nota';
+      n.textContent = '';
+      notasDiv.appendChild(n);
+    }
+
+    const input = document.createElement('input');
+    input.className = 'sudoku-input';
+    input.dataset.row = r;
+    input.dataset.col = c;
+
+    input.addEventListener('focus', () => {
+      if (selectedCell) selectedCell.input.classList.remove('selected');
+      selectedCell = { input, r, c, cell };
+      input.classList.add('selected');
+    });
+
+    cell.appendChild(notasDiv);
+    cell.appendChild(input);
+    return cell;
+  }
+
   function createGrid() {
     gridEl.innerHTML = '';
     gridData = [];
@@ -126,57 +179,44 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
     for (let r = 0; r < GRID_SIZE; r++) {
       const row = [];
       for (let c = 0; c < GRID_SIZE; c++) {
-        const cell = document.createElement('div');
-        cell.className = 'sudoku-cell';
-        if ((c + 1) % 3 === 0 && c < 8) cell.classList.add('thick-right');
-        if ((r + 1) % 3 === 0 && r < 8) cell.classList.add('thick-bottom');
-
-        const input = document.createElement('input');
-        input.className = 'sudoku-input';
-        input.dataset.row = r;
-        input.dataset.col = c;
-
-        input.addEventListener('focus', () => {
-          if (selectedCell) selectedCell.input.classList.remove('selected');
-          selectedCell = { input, r, c };
-          input.classList.add('selected');
-        });
-
-        input.addEventListener('click', () => {
-          if (selectedCell) selectedCell.input.classList.remove('selected');
-          selectedCell = { input, r, c };
-          input.classList.add('selected');
-        });
-
-        input.addEventListener('keydown', (e) => {
-          if (e.key >= '1' && e.key <= '9') {
-            e.preventDefault();
-            input.value = e.key;
-            input.classList.remove('correct', 'error');
-          } else if (e.key === 'Backspace' || e.key === 'Delete') {
-            e.preventDefault();
-            input.value = '';
-            input.classList.remove('correct', 'error');
-          }
-        });
-
-        cell.appendChild(input);
+        const cell = criarCell(r, c);
         gridEl.appendChild(cell);
-        row.push({ input, fixed: false });
+        row.push({ cell, input: cell.querySelector('input'), fixed: false, notas: [] });
       }
       gridData.push(row);
+    }
+  }
+
+  function atualizarNotas(r, c, num) {
+    const cell = gridData[r][c];
+    if (!cell) return;
+    const notasDiv = cell.cell.querySelector('.notas');
+    const notaEls = notasDiv.querySelectorAll('.nota');
+    const idx = parseInt(num) - 1;
+    if (notasAtivas) {
+      if (cell.notas.includes(num)) {
+        cell.notas = cell.notas.filter(n => n !== num);
+        notaEls[idx].textContent = '';
+      } else {
+        cell.notas.push(num);
+        notaEls[idx].textContent = num;
+      }
+    } else {
+      notaEls[idx].textContent = '';
     }
   }
 
   function novoJogo(nivel) {
     stopTimer();
     currentLevel = nivel;
+    notasAtivas = false;
+    btnNotas.classList.remove('active');
 
     const puzzle = SudokuGenerator.generateSudoku(nivel);
     gridData = [];
     solutionData = puzzle.solution;
 
-    const niveis = { facil: 'Fácil', intermediario: 'Intermediário', dificil: 'Difícil', avancado: 'Avançado', expert: 'Expert' };
+    const niveis = { facil: 'Fácil ⭐', intermediario: 'Intermediário ⭐⭐', dificil: 'Difícil ⭐⭐⭐', avancado: 'Avançado ⭐⭐⭐⭐', expert: 'Expert ⭐⭐⭐⭐⭐' };
     statusMsg.textContent = 'Nível: ' + niveis[nivel];
 
     createGrid();
@@ -188,6 +228,7 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
         if (val !== 0) {
           gridData[r][c].input.value = val;
           gridData[r][c].input.classList.add('fixed');
+          gridData[r][c].input.classList.add('resolved');
           gridData[r][c].fixed = true;
         }
       }
@@ -203,25 +244,26 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
 
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
-        const val = parseInt(gridData[r][c].input.value);
+        const cell = gridData[r][c];
+        const val = parseInt(cell.input.value);
         if (!val) {
           empty++;
-          gridData[r][c].input.classList.remove('correct', 'error');
+          cell.input.classList.remove('correct', 'error', 'resolved');
         } else if (val === solutionData[r][c]) {
           correct++;
-          gridData[r][c].input.classList.add('correct');
-          gridData[r][c].input.classList.remove('error');
+          cell.input.classList.add('correct', 'resolved');
+          cell.input.classList.remove('error');
         } else {
           errors++;
-          gridData[r][c].input.classList.add('error');
-          gridData[r][c].input.classList.remove('correct');
+          cell.input.classList.add('error');
+          cell.input.classList.remove('correct', 'resolved');
         }
       }
     }
 
     if (empty === 0 && errors === 0) {
       stopTimer();
-      statusMsg.textContent = '🎉 Parabéns! Sudoku completo em ' + formatTime(seconds) + '!';
+      statusMsg.innerHTML = '<span style="color:#1f7a3e">🎉 Parabéns! Sudoku completo em ' + formatTime(seconds) + '!</span>';
     } else if (errors > 0) {
       statusMsg.textContent = errors + ' erro(s) encontrado(s). Continue tentando!';
     } else {
@@ -234,7 +276,7 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
       for (let c = 0; c < GRID_SIZE; c++) {
         if (!gridData[r][c].fixed && !gridData[r][c].input.value) {
           gridData[r][c].input.value = solutionData[r][c];
-          gridData[r][c].input.classList.add('correct');
+          gridData[r][c].input.classList.add('correct', 'resolved');
           gridData[r][c].input.classList.remove('error');
           statusMsg.textContent = 'Dica: célula [' + (r+1) + ',' + (c+1) + '] = ' + solutionData[r][c];
           return;
@@ -244,34 +286,112 @@ body { padding: 20px 10px; background: var(--bg); font-family: system-ui, sans-s
     statusMsg.textContent = 'Jogo completo!';
   }
 
-  // Eventos
+  function apagar() {
+    if (selectedCell && !selectedCell.fixed) {
+      selectedCell.input.value = '';
+      selectedCell.input.classList.remove('correct', 'error', 'resolved');
+      selectedCell.notas = [];
+      const notasDiv = selectedCell.cell.querySelector('.notas');
+      notasDiv.querySelectorAll('.nota').forEach(n => n.textContent = '');
+    }
+  }
+
+  const numpad = document.getElementById('numpad');
+  let numerosUsados = [];
+
+  numpad.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'BUTTON') return;
+    const num = e.target.dataset.num;
+
+    if (notasAtivas && selectedCell && !selectedCell.fixed) {
+      atualizarNotas(selectedCell.r, selectedCell.c, num);
+      return;
+    }
+
+    if (!selectedCell || selectedCell.fixed) {
+      statusMsg.textContent = 'Selecione uma célula vazia primeiro.';
+      return;
+    }
+
+    selectedCell.input.value = num;
+    selectedCell.input.classList.remove('correct', 'error', 'resolved');
+
+    if (!numerosUsados.includes(num)) {
+      numerosUsados.push(num);
+      atualizarNumpad();
+    }
+  });
+
+  function atualizarNumpad() {
+    numpad.querySelectorAll('button').forEach(btn => {
+      if (numerosUsados.includes(btn.dataset.num)) {
+        btn.classList.add('resolved');
+      } else {
+        btn.classList.remove('resolved');
+      }
+    });
+  }
+
+  btnNotas.addEventListener('click', () => {
+    notasAtivas = !notasAtivas;
+    if (notasAtivas) {
+      btnNotas.classList.add('active');
+      statusMsg.textContent = 'Modo Anotações ativo! Clique na grade para anotar números.';
+    } else {
+      btnNotas.classList.remove('active');
+      statusMsg.textContent = 'Modo Anotações desativado.';
+      numpad.querySelectorAll('button').forEach(btn => btn.classList.remove('resolved'));
+      numerosUsados = [];
+      gridData.forEach(row => row.forEach(cell => {
+        const notasDiv = cell.cell.querySelector('.notas');
+        notasDiv.querySelectorAll('.nota').forEach(n => n.textContent = '');
+      }));
+    }
+  });
+
   document.getElementById('niveis').addEventListener('change', (e) => {
+    numerosUsados = [];
+    atualizarNumpad();
     novoJogo(e.target.value);
   });
 
   document.getElementById('btn-novo').addEventListener('click', () => {
+    numerosUsados = [];
+    atualizarNumpad();
     novoJogo(currentLevel);
   });
 
   document.getElementById('btn-verificar').addEventListener('click', verificar);
   document.getElementById('btn-dica').addEventListener('click', dica);
+  document.getElementById('btn-apagar').addEventListener('click', apagar);
 
-  // Numpad
-  document.getElementById('numpad').addEventListener('click', (e) => {
-    if (e.target.tagName !== 'BUTTON') return;
-    if (!selectedCell) return;
-
-    const num = e.target.dataset.num;
-    if (num === '0') {
-      selectedCell.input.value = '';
-      selectedCell.input.classList.remove('correct', 'error');
-    } else {
-      selectedCell.input.value = num;
-      selectedCell.input.classList.remove('correct', 'error');
+  document.getElementById('sudoku-grid').addEventListener('keydown', (e) => {
+    if (e.target.classList.contains('sudoku-input') && e.target.dataset.row !== undefined) {
+      const r = parseInt(e.target.dataset.row);
+      const c = parseInt(e.target.dataset.col);
+      if (gridData[r][c].fixed) {
+        e.preventDefault();
+        return;
+      }
+      if (e.key >= '1' && e.key <= '9') {
+        e.target.value = e.key;
+        e.target.classList.remove('correct', 'error', 'resolved');
+        if (!numerosUsados.includes(e.key)) {
+          numerosUsados.push(e.key);
+          atualizarNumpad();
+        }
+      } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.target.value = '';
+        e.target.classList.remove('correct', 'error', 'resolved');
+        if (numerosUsados.includes(e.target.dataset.lastNum)) {
+          numerosUsados = numerosUsados.filter(n => n !== e.target.dataset.lastNum);
+          atualizarNumpad();
+        }
+      }
+      e.target.dataset.lastNum = e.target.value;
     }
   });
 
-  // Iniciar com nível Fácil
   novoJogo('facil');
 })();
 </script>
